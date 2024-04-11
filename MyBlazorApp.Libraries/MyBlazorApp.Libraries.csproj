@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Cart\Services\" />
+    <Folder Include="Products\Models\" />
+    <Folder Include="Products\Services\" />
+    <Folder Include="Storage\Models\" />
+    <Folder Include="Storage\Contracts\" />
+    <Folder Include="Storage\Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ASP.NET.MVC" Version="3.0.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>
