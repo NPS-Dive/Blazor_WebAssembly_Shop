@@ -1,0 +1,70 @@
+﻿@using MyBlazorApp.Libraries.Products.Models
+@using MyBlazorApp.Libraries.Products.Contracts
+@using MyBlazorApp.Libraries.Cart.Services
+@using MyBlazorApp.Libraries.Cart.Contracts
+
+@inject ICartService CartService
+@implements IProductAddToCart
+
+<div class="card col-3 m-2" style="width: 18rem;">
+	<img class="card-img-top" src="/images/@Product.ProductImgAddress" alt="Card image cap" width="150px" height="150px">
+	<div class="card-body">
+		<h5 class="card-title">
+			<a href="@Product.ProductUrl">
+				@Product.ProductName
+			</a>
+		</h5>
+		<p class="card-text">@Product.ProductDescription</p>
+		<h5 class="card-title">@Product.ProductPrice $</h5>
+		<div class="row mt-1">
+			<div class="col-5">
+				<input @bind="Quantity" type="number" placeholder="Quantity" min="0" max="" class="form-control" />
+			</div>
+			<div class="col-7">
+				<button type="button" class="btn btn-success" @onclick="AddToCart">
+
+					@if (CartService.HasProduct(Product.SKU))
+					{
+						<span>
+							Increase your Shopping
+							@if (Quantity.HasValue)
+							{
+								<text>@Quantity Boom It</text>
+							}
+						</span>
+					}
+					else
+					{
+						<span>Purchase Initiation</span>
+					}
+				</button>
+			</div>
+		</div >
+		<div class="row mt-1 align-content-center">
+			<a href="#" class="btn btn-primary">Details</a>
+		</div>
+	</div>
+</div>
+
+
+@code
+{
+	[Parameter]
+	public ProductModel? Product { get; set; }
+
+
+	public int? Quantity { get; set; }
+
+}
+
+@functions
+{
+	public void AddToCart ()
+		{
+		if (Product != null)
+			{
+			CartService.InsertProduct(Product, Quantity ?? 1);
+			Quantity = null;
+			}
+		}
+}

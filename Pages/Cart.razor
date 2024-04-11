@@ -1,0 +1,41 @@
+﻿@using MyBlazorApp.Libraries.Cart.Contracts
+@using MyBlazorApp.Libraries.Cart.Models
+
+@page "/cart"	
+
+@inject ICartService   CartService
+
+<PageTitle>My Shopping Cart</PageTitle>
+			
+<div class="row">
+	<table class="table table-bordered table-striped">
+		<tr>   
+			<th>Item</th>
+			<th>Image</th>
+			<th>Fee</th>
+			<th>Quantity</th> 
+			<th>Total Price</th>   
+			
+		</tr>				
+		@foreach (var item in CartService.Get().Items)
+		{
+			<tr>
+				<td>@item.Product.ProductName</td>
+				<td><img class="card-img-top" src="/images/@item.Product.ProductImgAddress" alt="Card image cap" style="max-width: 100px"></td>
+				<td>@item.ProductPrice</td>
+				<td>@item.ProductQuantity</td>
+				<td>@item.TotalPrice</td>
+			
+			</tr>
+		}
+	</table>
+</div>
+
+@code {
+
+}	
+
+@functions
+{
+	
+}

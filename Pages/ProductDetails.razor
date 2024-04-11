@@ -1,0 +1,129 @@
+﻿@using MyBlazorApp.Libraries.Products.Contracts
+@using MyBlazorApp.Libraries.Products.Models
+@using MyBlazorApp.Libraries.Cart.Contracts
+
+@page "/product/{slug}"
+
+@inject IProductService ProductService
+@inject ICartService CartService
+
+@if (Product != null)
+	{
+	<PageTitle>@Product.ProductName</PageTitle>
+	}
+
+
+@if (Product == null)
+	{
+	<div class=" alert alert-warning">
+		<h2>The Product is not Found!</h2>
+	</div>
+	}
+else
+	{
+	<div class="row">
+		<div class="col-3">
+			<img src="images/@Product.ProductImgAddress" class="img-thumbnail" width="250px" height="250px" />
+		</div>
+		<div class="col-9">
+			<h2>Product Details: <strong>@Product.ProductName</strong></h2>
+			<hr />
+			<p class="text-success">Price: <strong>@Product.ProductPrice $</strong></p>
+			<p><strong>Description:</strong><br /> @Product.ProductDescription</p>
+			<div class="row align-content-center align-items-center m-2">
+				@if (CartService.Count() > 0)
+					{
+					<p>iItems in Your Cart: <strong>@CartService.Count()</strong></p>
+					}
+				<div class="col-2">
+					<input @bind="Quantity" type="number" placeholder="Quantity" min="0" max="" class="form-control m-1" />
+				</div>
+				<div class="col-4">
+					<button type="button" class="btn btn-success m-1" @onclick="AddToCart">
+
+						@if (CartService.HasProduct(Product.SKU))
+							{
+							<span>
+								Increase your Shopping
+								@if (Quantity.HasValue)
+									{
+									<text>@Quantity Boom It</text>
+									}
+							</span>
+							}
+						else
+							{
+							<span>Purchase Initiation</span>
+							}
+					</button>
+				</div>
+			</div>
+
+			<ul>
+				@foreach (var product in ProductList)
+					{
+					<li>
+						<a href="@product.ProductUrl">
+							@product.ProductName
+						</a>
+					</li>
+					}
+			</ul>
+		</div>
+	</div>
+	}
+
+<div class="row">
+	<h2>Other Available products</h2>
+	<hr />
+	@foreach (var product in ProductList)
+		{
+		<ProductItem Product="product" />
+		}
+</div>
+
+
+
+@code {
+
+	public ProductModel? Product { get; set; }
+	public IList<ProductModel>? ProductList { get; set; }
+	public int? Quantity { get; set; }
+
+	[Parameter]
+	public string? slug { get; set; }
+
+}
+
+@functions
+{
+	protected override void OnInitialized ()
+		{
+		ProductList = ProductService.GetAll();
+		if (!string.IsNullOrEmpty(slug))
+			{
+			Product = ProductService.GetProductBySlug(slug);
+			}
+		base.OnInitialized();
+		}
+
+	protected override void OnParametersSet ()
+		{
+		if (!string.IsNullOrEmpty(slug))
+			{
+			Product = ProductService.GetProductBySlug(slug);
+			}
+		base.OnParametersSet();
+		}
+
+	public void AddToCart ()
+		{
+		if (Product != null)
+			{
+			CartService.InsertProduct(Product, Quantity ?? 1);
+			Quantity = null;
+			}
+		}
+
+
+}

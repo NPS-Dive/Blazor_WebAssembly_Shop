@@ -1,0 +1,34 @@
+﻿@using MyBlazorApp.Libraries.Products.Contracts
+@using MyBlazorApp.Libraries.Products.Models
+
+@page "/"
+
+@inject IProductService productService
+ 
+
+
+<PageTitle>Products List</PageTitle>
+
+@if (ProductList?.Any() ?? false)
+	{
+	<h2>Latest Products</h2>
+	<hr />
+	<div class="row">
+		@foreach (var product in ProductList)
+			{
+
+				<ProductItem Product="product"/>
+			}
+	</div>
+	}
+
+@code
+{
+	public IList<ProductModel>? ProductList { get; set; }
+
+	protected override void OnInitialized ()
+		{
+		ProductList = productService.GetAll();
+		base.OnInitialized();
+		}
+}
